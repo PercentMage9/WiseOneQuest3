@@ -5,9 +5,12 @@ using UnityEngine;
 public class SetNames : MonoBehaviour
 {
     //Create variables for GameObjects and the array for enemy names
-    public GameObject EnemyNameText;
-    public GameObject PlayerNameText;
-    public GameObject PlayerNameTextBox;
+    public GameObject EnemyNameText;                //Refers to the text above the enemy's head
+    public GameObject PlayerNameText;               //Refers to the text above the player's head
+    public GameObject PlayerNameTextBox;            //Refers to the box the player enters their name into
+    public GameObject ErrorText;                    //Refers to the error text on the name enter form
+    public GameObject Self;                         //Refers to the name enter form
+    public GameObject ElementPanel;                 //Refers to the element enter form
     public string[] EnemyNameList = {"Olius","Dhesorin","Elzofaris","Uharad","Onzozohr","Abahn","Ondivior","Ozahl","Tilius","Edius"};
 
     void Start()
@@ -19,7 +22,20 @@ public class SetNames : MonoBehaviour
     //For setting the player name
     public void setPlayerName()
     {
-        //Set the player name text to the text inside the name enter text box
-        PlayerNameText.GetComponent<TMPro.TextMeshProUGUI>().text = PlayerNameTextBox.GetComponent<TMPro.TextMeshProUGUI>().text;       
+        string EnteredName = PlayerNameTextBox.GetComponent<TMPro.TextMeshProUGUI>().text;              //Create a variable for the if statement
+
+        if (EnteredName.Length > 16 || EnteredName.Length < 1)                                          //Checks if the name is of appropriate length
+        {
+            ErrorText.SetActive(true);
+            ErrorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid name length!";
+        }
+        else
+        {
+            //Close the name enter form and open the element form
+            ErrorText.SetActive(false);
+            Self.SetActive(false);
+            ElementPanel.SetActive(true);
+            PlayerNameText.GetComponent<TMPro.TextMeshProUGUI>().text = EnteredName;                    //Store the player's name in the UI text
+        }
     }
 }
