@@ -24,18 +24,19 @@ public class SetNames : MonoBehaviour
     {
         string EnteredName = PlayerNameTextBox.GetComponent<TMPro.TextMeshProUGUI>().text;              //Create a variable for the if statement
 
-        if (EnteredName.Length > 16 || EnteredName.Length < 1)                                          //Checks if the name is of appropriate length
+        //Needs fixing to not allow 0 length names
+        if (EnteredName.Length > 0 && EnteredName.Length <= 16)                                          //Checks if the name is of appropriate length
         {
-            ErrorText.SetActive(true);
-            ErrorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid name length!";
-        }
-        else
-        {
-            //Close the name enter form and open the element form
             ErrorText.SetActive(false);
             Self.SetActive(false);
             ElementPanel.SetActive(true);
             PlayerNameText.GetComponent<TMPro.TextMeshProUGUI>().text = EnteredName;                    //Store the player's name in the UI text
+        }
+        else
+        {
+            //Close the name enter form and open the element form
+            ErrorText.SetActive(true);
+            ErrorText.GetComponent<TMPro.TextMeshProUGUI>().text = "Invalid name length!";
         }
     }
 }
