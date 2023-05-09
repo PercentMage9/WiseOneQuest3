@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,14 +19,18 @@ public class FightScript : MonoBehaviour
     public Wizard playerWizard,enemyWizard;
 
     //Game objects
-    public GameObject FightPanel;
-    public GameObject Button1Text;
-    public GameObject Button2Text;
-    public GameObject Button3Text;
-    public GameObject Button4Text;
+    public GameObject fightPanel;
+    public GameObject screens;
+    public GameObject winnerScreen;
+
+    public TextMeshProUGUI button1Text;
+    public TextMeshProUGUI button2Text;
+    public TextMeshProUGUI button3Text;
+    public TextMeshProUGUI button4Text;
+    public TextMeshProUGUI winnerText;
 
     //Attack names array for assigning to button text
-    string[][] attackNames = new string[][]
+    public string[][] attackNames = new string[][]
     {
     new string[]{"Fiery Fiasco","Inferno Insanity","Flame Frenzy","Burnout Blitz"},
     new string[]{"Aqua Assault","Splash Attack","Water Wallop","Bubble Blast"},
@@ -53,11 +56,12 @@ public class FightScript : MonoBehaviour
     public int chosenAttack = 0;
 
     //Health setup
-    public Slider PlayerHealthBar;
-    public Slider EnemyHealthBar;
-    public int MinHealth;                   //Having these makes it easier to change the min/max values while in unity editor
-    public int MaxHealth;
+    public Slider playerHealthBar;
+    public Slider enemyHealthBar;
+    public int minHealth;                   //Having these makes it easier to change the min/max values while in unity editor
+    public int maxHealth;
 
+    private bool isItPlayersTurn;
 
     public void WizardInitialize(Wizard wizard,Slider healthBar)
     {
@@ -71,15 +75,12 @@ public class FightScript : MonoBehaviour
         wizard.wisdom = Random.Range(minWisDexStat, maxWisDexStat);             //Set player wisdom to a random value between these values
 
         //Health setup
-        //Creates random integers between given variables, divides by 10, rounds and then times by 10 to get closest 10
-        int PlayerRandInt = Mathf.RoundToInt(Random.Range(MinHealth, MaxHealth) / 10) * 10;
-        int EnemyRandInt = Mathf.RoundToInt(Random.Range(MinHealth, MaxHealth) / 10) * 10;
-
-        //Set their health max values
-        healthBar.maxValue = PlayerRandInt;
+        //Creates random integer between given variables, divides by 10, rounds and then times by 10 to get closest 10
+        int healthRandInt = Mathf.RoundToInt(Random.Range(minHealth, maxHealth) / 10) * 10;
 
         //Set their current health to the max value
-        healthBar.value = PlayerHealthBar.maxValue;
+        wizard.maxHealth = healthRandInt;
+        wizard.currentHealh = wizard.maxHealth;
     }
 
     //On start
@@ -88,8 +89,8 @@ public class FightScript : MonoBehaviour
         playerWizard = new Wizard();
         enemyWizard = new Wizard();
 
-        WizardInitialize(playerWizard, PlayerHealthBar);
-        WizardInitialize(enemyWizard, EnemyHealthBar);
+        WizardInitialize(playerWizard, playerHealthBar);
+        WizardInitialize(enemyWizard, enemyHealthBar);
     }
 
     //For setting the player's element depending on what element is selected
@@ -98,41 +99,98 @@ public class FightScript : MonoBehaviour
         var elementsIndex = elementList.value;
 
         //Assign the text in the buttons to the values in the arrays dependant on what element the player is
-        Button1Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][0];
-        Button2Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][1];
-        Button3Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][2];
-        Button4Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][3];
+        button1Text.text = attackNames[elementsIndex][0];
+        button2Text.text = attackNames[elementsIndex][1];
+        button3Text.text = attackNames[elementsIndex][2];
+        button4Text.text = attackNames[elementsIndex][3];
 
         playerWizard.element = (Elements)elementsIndex;
+    }
+
+    public void Update()
+    {
+        playerHealthBar.maxValue = playerWizard.maxHealth;
+        enemyHealthBar.maxValue = enemyWizard.maxHealth;
+
+        playerHealthBar.value = playerWizard.currentHealh;
+        enemyHealthBar.value = enemyWizard.currentHealh;
     }
 
     //For starting the game
     public void StartGame()
     {
         //Start the fight!!
-        if (playerWizard.dexterity < enemyWizard.dexterity)       //If the enemy has higher dexterity
+        if (playerWizard.dexterity >= enemyWizard.dexterity)
         {
-            FightPanel.SetActive(false);
-            chosenAttack = Random.Range(0, 3);
-            WizardTurn(enemyWizard,playerWizard,chosenAttack);
+            isItPlayersTurn = true;
         }
-        else                                        //If the player has equal to or higher dexterity
+        else
         {
-            FightPanel.SetActive(true);
+            isItPlayersTurn = false;
+        }
+
+        StartWizardTurn();
+    }
+
+    public void RunWizardAttack(int chosenAttack)
+    {
+        //Start the fight!!
+        if (isItPlayersTurn == true)
+        {
+            fightPanel.SetActive(true);
+            WizardAttack(playerWizard, enemyWizard, chosenAttack);
+        }
+        else
+        {
+            fightPanel.SetActive(false);
             chosenAttack = Random.Range(0, 3);
-            WizardTurn(playerWizard,enemyWizard,chosenAttack);
+            WizardAttack(enemyWizard, playerWizard, chosenAttack);
         }
     }
 
-    public void RunWizardTurn(int chosenAttack)
+    public void StartWizardTurn()
     {
-        WizardTurn(playerWizard,enemyWizard,chosenAttack);
+        if (enemyWizard.currentHealh <= 0)
+        {
+            GameOver(true);
+            return;
+        }
+        else if (playerWizard.currentHealh <= 0)
+        {
+            GameOver(false);
+            return;
+        }
+
+
+        if(isItPlayersTurn == true) 
+        {
+            fightPanel.SetActive(true);
+        }
+        else 
+        { 
+            fightPanel.SetActive(false);
+            RunWizardAttack(chosenAttack);
+        }
+    }
+
+    public void GameOver(bool hasPlayerWon)
+    {
+        Debug.Log(hasPlayerWon? "player wins very gaming" : "ah shit");
+        screens.SetActive(false);
+        winnerText.text = (hasPlayerWon ? playerWizard.name : enemyWizard.name) + " has won!";
+        winnerScreen.SetActive(true);
+
+    }
+
+    public void ResetGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     //Wizards, they fight!
-    public void WizardTurn(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
+    public void WizardAttack(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
     {
-        FightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
+        fightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
         StartCoroutine(WaitAndPrint(3.0f));                 //Pause for 3 seconds
 
         //Determine the damage to deal
@@ -175,11 +233,10 @@ public class FightScript : MonoBehaviour
             MultiplyDamage();
         }
 
-        PlayerHealthBar.value = (PlayerHealthBar.value - damageToDeal);
-        Debug.Log("Enemy turn ended!");
-        Debug.Log(FightPanel.activeInHierarchy);
-        FightPanel.SetActive(FightPanel.activeInHierarchy == false);
-        Debug.Log(FightPanel.activeInHierarchy);
+        defendingWizard.currentHealh = (defendingWizard.currentHealh - damageToDeal);
+        isItPlayersTurn = !isItPlayersTurn;
+        StartWizardTurn();
+        Debug.Log("Turn ended!");
     }
 
     public void MultiplyDamage()
