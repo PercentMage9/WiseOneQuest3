@@ -467,8 +467,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1980,18 +1980,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1908053783}
-        m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
-        m_MethodName: setPlayerElement
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1642603583}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -2030,7 +2018,19 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1908053783}
         m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
-        m_MethodName: playerTurn
+        m_MethodName: setPlayerElement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1908053783}
+        m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
+        m_MethodName: startGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6872,8 +6872,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -12098,8 +12098,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -12985,9 +12985,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1908053777}
-  - component: {fileID: 1908053778}
   - component: {fileID: 1908053779}
-  - component: {fileID: 1908053782}
   - component: {fileID: 1908053783}
   m_Layer: 0
   m_Name: _GameManager
@@ -13011,19 +13009,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1908053778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908053775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c71a9e915c0816845ab49bf715cdaba5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Target: {fileID: 54878152}
 --- !u!114 &1908053779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13053,24 +13038,6 @@ MonoBehaviour:
   - Ozahl
   - Tilius
   - Edius
---- !u!114 &1908053782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908053775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b153aaa03416974fb68607d1fcddb59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minStat: 0
-  maxStat: 100
-  playerDexterity: 0
-  enemyDexterity: 0
-  playerWisdom: 0
-  enemyWisdom: 0
 --- !u!114 &1908053783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13088,33 +13055,19 @@ MonoBehaviour:
   Button2Text: {fileID: 18097748}
   Button3Text: {fileID: 919078070}
   Button4Text: {fileID: 2136564787}
-  fireAttackNames:
-  - Fiery Fiasco
-  - Inferno Insanity
-  - Flame Frenzy
-  - Burnout Blitz
-  waterAttackNames:
-  - Aqua Assault
-  - Splash Attack
-  - Water Wallop
-  - Bubble Blast
-  earthAttackNames:
-  - Dirt Devilry
-  - Boulderdash Blitz
-  - Pebble Pummel
-  - Soil Slam
-  airAttackNames:
-  - Whirlwind Whack
-  - Airborne Assault
-  - Tempest Takedown
-  - Breeze Blast
-  attack1BaseDamage: 0
-  attack2BaseDamage: 0
-  attack3BaseDamage: 0
-  attack4BaseDamage: 0
+  attack1BaseDamage: 15
+  attack2BaseDamage: 25
+  attack3BaseDamage: 20
+  attack4BaseDamage: 30
   playerElementValue: 0
   enemyElementValue: 0
   elementList: {fileID: 1596619106}
+  minWisDexStat: 10
+  maxWisDexStat: 20
+  playerDexterity: 0
+  enemyDexterity: 0
+  playerWisdom: 0
+  enemyWisdom: 0
   PlayerHealthBar: {fileID: 1236627018}
   EnemyHealthBar: {fileID: 768737376}
   MinHealth: 100
@@ -14759,8 +14712,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

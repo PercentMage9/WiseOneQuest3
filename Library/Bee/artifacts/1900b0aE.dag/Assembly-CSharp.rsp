@@ -355,12 +355,11 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/FightScript.cs"
-"Assets/Scripts/HideGameObject.cs"
 "Assets/Scripts/Old/HealthSetup.cs"
 "Assets/Scripts/Old/SetElements.cs"
+"Assets/Scripts/Old/SetStats.cs"
+"Assets/Scripts/Old/SetWisDex.cs"
 "Assets/Scripts/SetNames.cs"
-"Assets/Scripts/SetStats.cs"
-"Assets/Scripts/SetWisDex.cs"
 -langversion:9.0
 
 /deterministic
