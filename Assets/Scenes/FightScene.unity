@@ -2018,7 +2018,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1908053783}
         m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
-        m_MethodName: setPlayerElement
+        m_MethodName: SetPlayerElement
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2030,7 +2030,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1908053783}
         m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
-        m_MethodName: startGame
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8888,7 +8888,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1908053779}
         m_TargetAssemblyTypeName: SetNames, Assembly-CSharp
-        m_MethodName: setPlayerName
+        m_MethodName: SetPlayerName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13068,6 +13068,8 @@ MonoBehaviour:
   enemyDexterity: 0
   playerWisdom: 0
   enemyWisdom: 0
+  damageToDeal: 0
+  chosenAttack: 0
   PlayerHealthBar: {fileID: 1236627018}
   EnemyHealthBar: {fileID: 768737376}
   MinHealth: 100

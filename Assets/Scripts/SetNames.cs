@@ -20,7 +20,7 @@ public class SetNames : MonoBehaviour
     }
 
     //For setting the player name
-    public void setPlayerName()
+    public void SetPlayerName()
     {
         string EnteredName = PlayerNameTextBox.GetComponent<TMPro.TextMeshProUGUI>().text;              //Create a variable for the if statement
 

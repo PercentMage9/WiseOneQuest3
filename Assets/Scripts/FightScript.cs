@@ -4,6 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Ethan's stupid enums
+public enum Elements
+{
+    Fire,
+    Water,
+    Earth,
+    Air
+}
+
 public class FightScript : MonoBehaviour
 {
     //Note: elements go in order of: 0 - fire, 1 - water, 2 - earth, 3 - air
@@ -30,8 +39,8 @@ public class FightScript : MonoBehaviour
     public int attack4BaseDamage;
 
     //Element setup
-    public int playerElementValue;
-    public int enemyElementValue;
+    public Elements playerElementValue;
+    public Elements enemyElementValue;
     public TMP_Dropdown elementList;
 
     //Wisdom dexterity setup
@@ -57,7 +66,7 @@ public class FightScript : MonoBehaviour
     {
         //Element setup
         var RandNumber = Random.Range(0,3);             //Pick a random number between 0 and 3
-        enemyElementValue = RandNumber;                 //Set enemy element value to that number
+        enemyElementValue = (Elements)RandNumber;                 //Set enemy element value to that number
 
         //Wisdom dexterity setup
         playerDexterity = Random.Range(minWisDexStat,maxWisDexStat);             //Set player dexterity to a random value between these values
@@ -80,44 +89,47 @@ public class FightScript : MonoBehaviour
     }
 
     //For setting the player's element depending on what element is selected
-    public void setPlayerElement()
+    public void SetPlayerElement()
     {
-        playerElementValue = elementList.value;
+        var elementsIndex = elementList.value;
 
         //Assign the text in the buttons to the values in the arrays dependant on what element the player is
-        Button1Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[playerElementValue][0];
-        Button2Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[playerElementValue][1];
-        Button3Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[playerElementValue][2];
-        Button4Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[playerElementValue][3];
+        Button1Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][0];
+        Button2Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][1];
+        Button3Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][2];
+        Button4Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][3];
+
+        playerElementValue = (Elements)elementsIndex;
     }
 
     //For starting the game
-    public void startGame()
+    public void StartGame()
     {
         //Start the fight!!
         if (playerDexterity < enemyDexterity)       //If the enemy has higher dexterity
         {
-            enemyTurn();
+            EnemyTurn();
         }
         else                                        //If the player has equal to or higher dexterity
         {
-            playerTurn();
+            PlayerTurn();
         }
     }
 
     //For when its the player's turn
-    public void playerTurn()
+    public void PlayerTurn()
     {
         FightPanel.SetActive(true);         //Open the fight panel
     }
 
     //For when its the enemy turn
-    public void enemyTurn()
+    public void EnemyTurn()
     {
         FightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
         StartCoroutine(WaitAndPrint(3.0f));                 //Pause for 3 seconds
-        chosenAttack = Mathf.RandNumber(0,3);
+        chosenAttack = Random.Range(0,3);
 
+        //Determine the damage to deal
         if (chosenAttack == 0)
         {
             damageToDeal = (enemyDexterity + attack1BaseDamage);
@@ -134,10 +146,37 @@ public class FightScript : MonoBehaviour
         {
             damageToDeal = (enemyDexterity + attack4BaseDamage);
         }
-        else        //Fallback for incase the chosen attadck somehow equals something else
+        else        //Fallback for incase the chosen attack somehow equals something else
         {
             damageToDeal = (enemyDexterity + 20);
         }
+
+        //Multiply damage depending on element type
+        if (enemyElementValue == Elements.Fire && playerElementValue == Elements.Air)
+        {
+            MultiplyDamage();
+        }
+        else if (enemyElementValue == Elements.Water && playerElementValue == Elements.Fire)
+        {
+            MultiplyDamage();
+        }
+        else if (enemyElementValue == Elements.Earth && playerElementValue == Elements.Water)
+        {
+            MultiplyDamage();
+        }
+        else if (enemyElementValue == Elements.Air && playerElementValue == Elements.Earth)
+        {
+            MultiplyDamage();
+        }
+
+        PlayerHealthBar.value = (PlayerHealthBar.value - damageToDeal);
+        Debug.Log("Enemy turn ended!");
+        PlayerTurn();
+    }
+
+    public void MultiplyDamage()
+    {
+        damageToDeal = (int)(damageToDeal * 1.5f);
     }
 
     //Function for pausing
