@@ -16,6 +16,9 @@ public enum Elements
 public class FightScript : MonoBehaviour
 {
     //Note: elements go in order of: 0 - fire, 1 - water, 2 - earth, 3 - air
+
+    public Wizard playerWizard,enemyWizard;
+
     //Game objects
     public GameObject FightPanel;
     public GameObject Button1Text;
@@ -39,17 +42,11 @@ public class FightScript : MonoBehaviour
     public int attack4BaseDamage;
 
     //Element setup
-    public Elements playerElementValue;
-    public Elements enemyElementValue;
     public TMP_Dropdown elementList;
 
     //Wisdom dexterity setup
     public int minWisDexStat;                    //Minimum value any of these stats can be
     public int maxWisDexStat;                    //Maximum value any of these stats can be
-    public int playerDexterity;
-    public int enemyDexterity;
-    public int playerWisdom;
-    public int enemyWisdom;
 
     //Attack variables
     public int damageToDeal = 0;
@@ -61,31 +58,38 @@ public class FightScript : MonoBehaviour
     public int MinHealth;                   //Having these makes it easier to change the min/max values while in unity editor
     public int MaxHealth;
 
-    //On start
-    void Start()
+
+    public void WizardInitialize(Wizard wizard,Slider healthBar)
     {
+
         //Element setup
-        var RandNumber = Random.Range(0,3);             //Pick a random number between 0 and 3
-        enemyElementValue = (Elements)RandNumber;                 //Set enemy element value to that number
+        var RandNumber = Random.Range(0, 3);             //Pick a random number between 0 and 3
+        wizard.element = (Elements)RandNumber;                 //Set enemy element value to that number
 
         //Wisdom dexterity setup
-        playerDexterity = Random.Range(minWisDexStat,maxWisDexStat);             //Set player dexterity to a random value between these values
-        enemyDexterity = Random.Range(minWisDexStat,maxWisDexStat);             //Set enemy dexterity to a random value between these values
-        playerWisdom = Random.Range(minWisDexStat,maxWisDexStat);             //Set player wisdom to a random value between these values
-        enemyWisdom = Random.Range(minWisDexStat,maxWisDexStat);             //Set enemy wisdom to a random value between these values
+        wizard.dexterity = Random.Range(minWisDexStat, maxWisDexStat);             //Set player dexterity to a random value between these values
+        wizard.wisdom = Random.Range(minWisDexStat, maxWisDexStat);             //Set player wisdom to a random value between these values
 
         //Health setup
         //Creates random integers between given variables, divides by 10, rounds and then times by 10 to get closest 10
-        int PlayerRandInt = Mathf.RoundToInt(Random.Range(MinHealth,MaxHealth) / 10) * 10;
-        int EnemyRandInt = Mathf.RoundToInt(Random.Range(MinHealth,MaxHealth) / 10) * 10; 
+        int PlayerRandInt = Mathf.RoundToInt(Random.Range(MinHealth, MaxHealth) / 10) * 10;
+        int EnemyRandInt = Mathf.RoundToInt(Random.Range(MinHealth, MaxHealth) / 10) * 10;
 
         //Set their health max values
-        PlayerHealthBar.maxValue = PlayerRandInt;
-        EnemyHealthBar.maxValue = EnemyRandInt;
+        healthBar.maxValue = PlayerRandInt;
 
         //Set their current health to the max value
-        PlayerHealthBar.value = PlayerHealthBar.maxValue;
-        EnemyHealthBar.value = EnemyHealthBar.maxValue;
+        healthBar.value = PlayerHealthBar.maxValue;
+    }
+
+    //On start
+    void Start()
+    {
+        playerWizard = new Wizard();
+        enemyWizard = new Wizard();
+
+        WizardInitialize(playerWizard, PlayerHealthBar);
+        WizardInitialize(enemyWizard, EnemyHealthBar);
     }
 
     //For setting the player's element depending on what element is selected
@@ -99,79 +103,83 @@ public class FightScript : MonoBehaviour
         Button3Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][2];
         Button4Text.GetComponent<TMPro.TextMeshProUGUI>().text = attackNames[elementsIndex][3];
 
-        playerElementValue = (Elements)elementsIndex;
+        playerWizard.element = (Elements)elementsIndex;
     }
 
     //For starting the game
     public void StartGame()
     {
         //Start the fight!!
-        if (playerDexterity < enemyDexterity)       //If the enemy has higher dexterity
+        if (playerWizard.dexterity < enemyWizard.dexterity)       //If the enemy has higher dexterity
         {
-            EnemyTurn();
+            FightPanel.SetActive(false);
+            chosenAttack = Random.Range(0, 3);
+            WizardTurn(enemyWizard,playerWizard,chosenAttack);
         }
         else                                        //If the player has equal to or higher dexterity
         {
-            PlayerTurn();
+            FightPanel.SetActive(true);
+            chosenAttack = Random.Range(0, 3);
+            WizardTurn(playerWizard,enemyWizard,chosenAttack);
         }
     }
 
-    //For when its the player's turn
-    public void PlayerTurn()
+    public void RunWizardTurn(int chosenAttack)
     {
-        FightPanel.SetActive(true);         //Open the fight panel
+        WizardTurn(playerWizard,enemyWizard,chosenAttack);
     }
 
-    //For when its the enemy turn
-    public void EnemyTurn()
+    //Wizards, they fight!
+    public void WizardTurn(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
     {
         FightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
         StartCoroutine(WaitAndPrint(3.0f));                 //Pause for 3 seconds
-        chosenAttack = Random.Range(0,3);
 
         //Determine the damage to deal
         if (chosenAttack == 0)
         {
-            damageToDeal = (enemyDexterity + attack1BaseDamage);
+            damageToDeal = (attackingWizard.dexterity + attack1BaseDamage);
         }
         else if (chosenAttack == 1)
         {
-            damageToDeal = (enemyDexterity + attack2BaseDamage);
+            damageToDeal = (attackingWizard.dexterity + attack2BaseDamage);
         }
         else if (chosenAttack == 2)
         {
-            damageToDeal = (enemyDexterity + attack3BaseDamage);
+            damageToDeal = (attackingWizard.dexterity + attack3BaseDamage);
         }
         else if (chosenAttack == 3)
         {
-            damageToDeal = (enemyDexterity + attack4BaseDamage);
+            damageToDeal = (attackingWizard.dexterity + attack4BaseDamage);
         }
         else        //Fallback for incase the chosen attack somehow equals something else
         {
-            damageToDeal = (enemyDexterity + 20);
+            damageToDeal = (attackingWizard.dexterity + 20);
         }
 
         //Multiply damage depending on element type
-        if (enemyElementValue == Elements.Fire && playerElementValue == Elements.Air)
+        if (attackingWizard.element == Elements.Fire && defendingWizard.element == Elements.Air)
         {
             MultiplyDamage();
         }
-        else if (enemyElementValue == Elements.Water && playerElementValue == Elements.Fire)
+        else if (attackingWizard.element == Elements.Water && defendingWizard.element == Elements.Fire)
         {
             MultiplyDamage();
         }
-        else if (enemyElementValue == Elements.Earth && playerElementValue == Elements.Water)
+        else if (attackingWizard.element == Elements.Earth && defendingWizard.element == Elements.Water)
         {
             MultiplyDamage();
         }
-        else if (enemyElementValue == Elements.Air && playerElementValue == Elements.Earth)
+        else if (attackingWizard.element == Elements.Air && defendingWizard.element == Elements.Earth)
         {
             MultiplyDamage();
         }
 
         PlayerHealthBar.value = (PlayerHealthBar.value - damageToDeal);
         Debug.Log("Enemy turn ended!");
-        PlayerTurn();
+        Debug.Log(FightPanel.activeInHierarchy);
+        FightPanel.SetActive(FightPanel.activeInHierarchy == false);
+        Debug.Log(FightPanel.activeInHierarchy);
     }
 
     public void MultiplyDamage()

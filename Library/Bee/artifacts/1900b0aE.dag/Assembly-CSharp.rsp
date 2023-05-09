@@ -363,6 +363,7 @@
 "Assets/Scripts/Old/SetStats.cs"
 "Assets/Scripts/Old/SetWisDex.cs"
 "Assets/Scripts/SetNames.cs"
+"Assets/Scripts/Wizard.cs"
 -langversion:9.0
 
 /deterministic
