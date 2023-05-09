@@ -672,12 +672,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453d4bd326dd55d4b9b678c0039b9064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  namePanel: {fileID: 0}
+  elementPanel: {fileID: 1642603583}
+  fightScript: {fileID: 1908053783}
+  button: {fileID: 1280861923}
+  playerNameTextBox: {fileID: 1788888765}
   enemyNameText: {fileID: 907622884}
   playerNameText: {fileID: 497345719}
-  playerNameTextBox: {fileID: 1788888765}
   errorText: {fileID: 751869380}
-  fightScript: {fileID: 1908053783}
-  elementPanel: {fileID: 1642603583}
   enemyNameList:
   - Olius
   - Dhesorin
@@ -2069,6 +2071,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 771124735}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1908053783}
         m_TargetAssemblyTypeName: FightScript, Assembly-CSharp
@@ -5546,7 +5560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &771124736
 MonoBehaviour:
   m_ObjectHideFlags: 0

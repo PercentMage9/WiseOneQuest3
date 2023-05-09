@@ -138,13 +138,13 @@ public class FightScript : MonoBehaviour
         if (isItPlayersTurn == true)
         {
             fightPanel.SetActive(true);
-            WizardAttack(playerWizard, enemyWizard, chosenAttack);
+            StartCoroutine(WizardAttack(playerWizard, enemyWizard, chosenAttack));
         }
         else
         {
             fightPanel.SetActive(false);
             chosenAttack = Random.Range(0, 3);
-            WizardAttack(enemyWizard, playerWizard, chosenAttack);
+            StartCoroutine(WizardAttack(enemyWizard, playerWizard, chosenAttack));
         }
     }
 
@@ -175,11 +175,9 @@ public class FightScript : MonoBehaviour
 
     public void GameOver(bool hasPlayerWon)
     {
-        Debug.Log(hasPlayerWon? "player wins very gaming" : "ah shit");
         screens.SetActive(false);
         winnerText.text = (hasPlayerWon ? playerWizard.name : enemyWizard.name) + " has won!";
         winnerScreen.SetActive(true);
-
     }
 
     public void ResetGame()
@@ -188,10 +186,11 @@ public class FightScript : MonoBehaviour
     }
 
     //Wizards, they fight!
-    public void WizardAttack(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
+    public IEnumerator WizardAttack(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
     {
         fightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
-        StartCoroutine(WaitAndPrint(3.0f));                 //Pause for 3 seconds
+        yield return new WaitForSeconds(1);
+        Debug.Log("Done waiting!");
 
         //Determine the damage to deal
         if (chosenAttack == 0)
