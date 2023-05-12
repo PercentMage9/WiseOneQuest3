@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Ethan's stupid enums
+//"Ethan's stupid enums" - Ava
 public enum Elements
 {
     Fire,
@@ -241,12 +241,5 @@ public class FightScript : MonoBehaviour
     public void MultiplyDamage()
     {
         damageToDeal = (int)(damageToDeal * 1.5f);
-    }
-
-    //Function for pausing
-    IEnumerator WaitAndPrint(float waitTime)
-    {
-        yield return new WaitForSeconds(waitTime);
-        Debug.Log("Done waiting!");
     }
 }
