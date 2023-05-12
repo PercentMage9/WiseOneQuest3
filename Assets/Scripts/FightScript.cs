@@ -1,3 +1,4 @@
+//The most convoluted fight script ever
 using System.Collections;
 using TMPro;
 using UnityEngine;

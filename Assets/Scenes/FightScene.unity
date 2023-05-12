@@ -672,7 +672,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453d4bd326dd55d4b9b678c0039b9064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  namePanel: {fileID: 0}
   elementPanel: {fileID: 1642603583}
   fightScript: {fileID: 1908053783}
   button: {fileID: 1280861923}
