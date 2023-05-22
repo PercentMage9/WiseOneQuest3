@@ -1,4 +1,9 @@
-//The most convoluted fight script ever
+//Theres way too much annotation on here
+//I never really annotate unless its for group projects
+//Even then my annotation is like "this works, keep it"
+//Everything is all over the place and isnt
+//in places that make sense but it works
+//good luck.
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -19,7 +24,7 @@ public class FightScript : MonoBehaviour
 
     public Wizard playerWizard,enemyWizard;
 
-    //Game objects
+    //Game objects n stuff
     public GameObject fightPanel;
     public GameObject screens;
     public GameObject winnerScreen;
@@ -30,7 +35,7 @@ public class FightScript : MonoBehaviour
     public TextMeshProUGUI button4Text;
     public TextMeshProUGUI winnerText;
 
-    //Attack names array for assigning to button text
+    //Attack names array for assigning to button text, I hate how I did this but whatever
     public string[][] attackNames = new string[][]
     {
     new string[]{"Fiery Fiasco","Inferno Insanity","Flame Frenzy","Burnout Blitz"},
@@ -45,7 +50,7 @@ public class FightScript : MonoBehaviour
     public int attack3BaseDamage;
     public int attack4BaseDamage;
 
-    //Element setup
+    //Element setup thing
     public TMP_Dropdown elementList;
 
     //Wisdom dexterity setup
@@ -62,21 +67,22 @@ public class FightScript : MonoBehaviour
     public int minHealth;                   //Having these makes it easier to change the min/max values while in unity editor
     public int maxHealth;
 
+    //Boolean used for if its the players turn or not
     private bool isItPlayersTurn;
 
+    //Initiate wizardification! yar!
     public void WizardInitialize(Wizard wizard,Slider healthBar)
     {
 
         //Element setup
-        var RandNumber = Random.Range(0, 3);             //Pick a random number between 0 and 3
-        wizard.element = (Elements)RandNumber;                 //Set enemy element value to that number
+        var RandNumber = Random.Range(0, 3);
+        wizard.element = (Elements)RandNumber;
 
         //Wisdom dexterity setup
-        wizard.dexterity = Random.Range(minWisDexStat, maxWisDexStat);             //Set player dexterity to a random value between these values
-        wizard.wisdom = Random.Range(minWisDexStat, maxWisDexStat);             //Set player wisdom to a random value between these values
+        wizard.dexterity = Random.Range(minWisDexStat, maxWisDexStat);
+        wizard.wisdom = Random.Range(minWisDexStat, maxWisDexStat);
 
         //Health setup
-        //Creates random integer between given variables, divides by 10, rounds and then times by 10 to get closest 10
         int healthRandInt = Mathf.RoundToInt(Random.Range(minHealth, maxHealth) / 10) * 10;
 
         //Set their current health to the max value
@@ -84,7 +90,7 @@ public class FightScript : MonoBehaviour
         wizard.currentHealh = wizard.maxHealth;
     }
 
-    //On start
+    //On start, does stuff when it starts but not really since it does some stuff before this anyway, useless!!
     void Start()
     {
         playerWizard = new Wizard();
@@ -94,7 +100,7 @@ public class FightScript : MonoBehaviour
         WizardInitialize(enemyWizard, enemyHealthBar);
     }
 
-    //For setting the player's element depending on what element is selected
+    //For setting the player's element depending on what element is selected, I think, I sort of forgot and am running out of time, whatever it is this thing is important for setting player elements n stuff
     public void SetPlayerElement()
     {
         var elementsIndex = elementList.value;
@@ -108,19 +114,26 @@ public class FightScript : MonoBehaviour
         playerWizard.element = (Elements)elementsIndex;
     }
 
+    //Does stuff every frame or whenever it feels like it sometimes because just like how inconsistent Start() is, its bad and lies about what it does but whatever it works
     public void Update()
     {
+        //Sets health bar values to the current wizard health values so that the health bars are accurate to the current healths
         playerHealthBar.maxValue = playerWizard.maxHealth;
         enemyHealthBar.maxValue = enemyWizard.maxHealth;
 
         playerHealthBar.value = playerWizard.currentHealh;
         enemyHealthBar.value = enemyWizard.currentHealh;
+        //This is a really cheap and inefficient way of doing it since
+        //it doesnt really need to be re-set each update, but it works
+        //and doesnt take up a significant amount of resources and so
+        //I dont wanna risk breaking it by moving it to someplace else
     }
 
     //For starting the game
     public void StartGame()
     {
-        //Start the fight!!
+        //Start the fight!! checks the dexterity to see who should attack first on the first round
+        //we dont need to do this again since attacks take turns on from this, and so its only ever called once
         if (playerWizard.dexterity >= enemyWizard.dexterity)
         {
             isItPlayersTurn = true;
@@ -133,6 +146,12 @@ public class FightScript : MonoBehaviour
         StartWizardTurn();
     }
 
+    //So this is where things take a turn for the un-organised worse, good luck
+
+    //So, really hard to explain why this is here and why it fixed my problem, but it did. Basically I put this in
+    //so that I can check if its the player's turn, and either show/hide the fight panel and pass in the chosen attacks etc
+    //I think I did this because of the fact that I couldn't pass in more than one value into the WizardAttack method, this is
+    //a really whacky workaround, I think, I sort of forgot, just dont touch this ok thank you
     public void RunWizardAttack(int chosenAttack)
     {
         //Start the fight!!
@@ -149,6 +168,9 @@ public class FightScript : MonoBehaviour
         }
     }
 
+    //This is really poorly named, basically this checks for if any wizard is dead and then will call the gameover method with either
+    //true or false passed in, gameover true meaning the player won and false meaning the player lost, again really a cheap way to do it
+    //and then also it does stuff with the fight panel for if it is/isnt the players turn
     public void StartWizardTurn()
     {
         if (enemyWizard.currentHealh <= 0)
@@ -162,7 +184,6 @@ public class FightScript : MonoBehaviour
             return;
         }
 
-
         if(isItPlayersTurn == true) 
         {
             fightPanel.SetActive(true);
@@ -174,22 +195,25 @@ public class FightScript : MonoBehaviour
         }
     }
 
+    //Basically either recieves true or false from another method somewhere else in this unorganised mess and then will declare the winner depending on that
     public void GameOver(bool hasPlayerWon)
     {
         screens.SetActive(false);
+        //I really like this thing for quick and dirty true/false comparing for things like this, so nice and readable
         winnerText.text = (hasPlayerWon ? playerWizard.name : enemyWizard.name) + " has won!";
         winnerScreen.SetActive(true);
     }
 
+    //You really want me to annotate this? I never even annotate for personal things anyway, only group projects (this isnt a group project)
     public void ResetGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
-    //Wizards, they fight!
+    //This is for like determening damage to deal and to who and stuff, just read it and you'll see what it does, fairly readable code
     public IEnumerator WizardAttack(Wizard attackingWizard,Wizard defendingWizard,int chosenAttack)
     {
-        fightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed
+        fightPanel.SetActive(false);        //Close the fight panel, done to make sure its closed (cause it was randomly not closing, idk why)
         yield return new WaitForSeconds(1);
         Debug.Log("Done waiting!");
 
@@ -210,12 +234,14 @@ public class FightScript : MonoBehaviour
         {
             damageToDeal = (attackingWizard.dexterity + attack4BaseDamage);
         }
-        else        //Fallback for incase the chosen attack somehow equals something else
+        else        //Fallback for incase the chosen attack somehow equals something else, once had that happen but I dont think this version does that any more
         {
             damageToDeal = (attackingWizard.dexterity + 20);
         }
 
         //Multiply damage depending on element type
+        //Enums my beloved, its nice and readable and not
+        //gobbledigoop numbers n stuff
         if (attackingWizard.element == Elements.Fire && defendingWizard.element == Elements.Air)
         {
             MultiplyDamage();
@@ -233,12 +259,14 @@ public class FightScript : MonoBehaviour
             MultiplyDamage();
         }
 
+        //The bit that actually hurts them
         defendingWizard.currentHealh = (defendingWizard.currentHealh - damageToDeal);
         isItPlayersTurn = !isItPlayersTurn;
         StartWizardTurn();
         Debug.Log("Turn ended!");
     }
 
+    //What do you think it does, used for when the attacking wizard has an elemental advantage
     public void MultiplyDamage()
     {
         damageToDeal = (int)(damageToDeal * 1.5f);
