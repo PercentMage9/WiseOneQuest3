@@ -150,8 +150,7 @@ public class FightScript : MonoBehaviour
 
     //So, really hard to explain why this is here and why it fixed my problem, but it did. Basically I put this in
     //so that I can check if its the player's turn, and either show/hide the fight panel and pass in the chosen attacks etc
-    //I think I did this because of the fact that I couldn't pass in more than one value into the WizardAttack method, this is
-    //a really whacky workaround, I think, I sort of forgot, just dont touch this ok thank you
+    //I think I did this because of the fact that I couldn't pass in more than one value into the WizardAttack method
     public void RunWizardAttack(int chosenAttack)
     {
         //Start the fight!!
@@ -199,7 +198,7 @@ public class FightScript : MonoBehaviour
     public void GameOver(bool hasPlayerWon)
     {
         screens.SetActive(false);
-        //I really like this thing for quick and dirty true/false comparing for things like this, so nice and readable
+        //I really like this thing for quick true/false comparing for things like this, so nice and readable
         winnerText.text = (hasPlayerWon ? playerWizard.name : enemyWizard.name) + " has won!";
         winnerScreen.SetActive(true);
     }
